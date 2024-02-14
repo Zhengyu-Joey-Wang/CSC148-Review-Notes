@@ -2,7 +2,7 @@
 
 > For English please go here https://github.com/Zhengyu-Joey-Wang/CSC148-Midterm1-Review-Notes
 
-### 内存模型
+### 内存模型（Memory Model）
 
 + 变量
     + 变量存储实例（对象）的内存地址 `id(var)`
@@ -103,7 +103,7 @@ Python是纯面向对象编程语言
     isinstance(A, B) # False
     ```
 
-#### 多态 Polymorphism
+#### 多态（Polymorphism）
 + 多态通常有两种可能性
     + 一种是从父类覆盖方法（override）
 
@@ -131,7 +131,7 @@ Python是纯面向对象编程语言
                 pass
         ```
 
-#### 抽象类 Abstract class
+#### 抽象类（Abstract class）
 
 带有抽象方法的类就是抽象类
 
@@ -153,9 +153,9 @@ Python是纯面向对象编程语言
 
         在上面的例子中，类 A 是一个抽象类，因为它有一个抽象方法 foo()。
 
-#### Representation inverate (RI) 表示不变性
+#### 表示不变性（Representation inverate）
 
-类中的每个属性都需要满足特定条件
+Representation inverate（RI）是指在类中的每个属性都需要满足特定条件
 
 + 对于常规变量和方法，我们需要指定变量的类型和方法的返回值
 
@@ -215,7 +215,7 @@ Python是纯面向对象编程语言
                 self.content = content[:280]
         ```
 
-### 异常处理
+### 异常处理（Exceptions）
 
 异常也是对象，而异常的父类是 `Exception`。因此，任何继承自 `Exception` 类的类都可以被系统识别为异常类型。
 
@@ -288,7 +288,7 @@ Python是纯面向对象编程语言
     ```
     通过代码我们看出，这个堆栈是使用列表实现的。这就是 ADT 的概念；它只定义了数据结构中存在的操作，但不指定这些操作如何实现。
 
-### 栈和队列 Stack and Queue 
+### 栈和队列（Stack and Queue）
 
 它们是抽象数据类型（ADTs）
 
@@ -330,11 +330,11 @@ Python是纯面向对象编程语言
         + `dequeue()`: 最佳 O(1)；最坏 O(n)；平均 O(n) 或 O(1)（取决于链表的实现方式）
         + `is_empty()`: 最佳 O(1)；最坏 O(1)；平均 O(1)
 
-### 单链表 Single Linked List
+### 单链表（Single Linked List）
 
 单链表是由一组节点组成的一维列表结构。
 
-#### 节点 Node
+#### 节点（Node）
 单链表的节点是一个包含 `item` 和 `next` 属性的私有类。
 ```Python 
 from __future__ import annotations
