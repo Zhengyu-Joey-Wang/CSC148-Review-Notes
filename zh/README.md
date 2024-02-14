@@ -1,0 +1,416 @@
+## CSC148 Midterm1 Review
+
+> For English please go here https://github.com/Zhengyu-Joey-Wang/CSC148-Midterm1-Review-Notes
+
+### 内存模型
+
++ 变量
+    + 变量存储实例（对象）的内存地址 `id(var)`
+    + 等号 `=` 用于给变量赋值，例如：`a = 1` 将 `id(1)` 赋给变量 `a`
+
++ 存储模式
+
+    + 创建"容器"（`list`，`dict`，`object`）时
+        + 先创建外部变量，然后再创建内部变量。
+
++ 复制逻辑
+    ```python
+    lst = [[1], [2]]
+    new_lst = lst  
+    # new_lst 存储的是 id(lst)
+    # 修改 new_lst[i] 也会改变 lst[i]
+    
+    shallow_copy = lst[:] 
+    # 此处，shallow_copy = [id([1]), id([2])] 
+    # 这是浅拷贝，仅为 new_lst 分配新的列表地址
+    # new_lst 中的实例并未被复制
+    shallow_copy[1][0] = 3
+    print(lst) # [[3], [2]]
+    ```
++ Python 特性
+    + 在创建不可变（immutable）实例时，为了节省内存，Python 不主动创建新实例。它首先在内存中查找实例是否存在。如果存在，则直接引用该实例的地址；否则，创建新实例。
+        + 例如，Python 预先在内存中创建数字 `1~256` 的实例，并在使用时直接使用这些预先创建的数字实例。
+    + `lst.extend([1,2,3])` 等同于 `lst += [1,2,3]`
+        + 两者都不会改变 `lst` 的 id
+
+### 面向对象编程（OOP）
+
+Python是纯面向对象编程语言
+
+#### 类的基本概念
+
++ 类内部是一个统一整体
+    + 所有属性都可以在类中的任何地方使用 `self.xxx` 调用
+    + 同样，所有操作也可以在类中的任何地方使用 `self.xxx()` 调用
+    + 类是设计对象的过程，不直接使用对象
+
++ 创建实例和调用方法
+
+    ```python
+    class A:
+        def __init__(self):
+            ...
+            
+        def foo(self, item):
+            ....
+
+    # 创建一个实例
+    a = A()
+
+    # 使用实例
+    a.foo("test")
+    A.foo(a, "test")
+    ```
+
++ 创建类是需要注意的事项：
+    + 观察是否具有子类数据（属性）和操作。
+
++ 类之间的关系
+    + 继承关系 (Inheritance)
+        + 子类 `extant` 从父类继承形成
+    + 组合关系 (Composition)
+        + 一个对象是另一个对象的一部分属性（attribute）
+
+#### 继承和私有化（Inheritance & Privatisation）
+> 这里注意一点，Python没有继承关系和私有化属性与变量，Python只有继承和私有化的概念
++ `python` 作为一种单继承语言 - 每个类只能有一个父类
++ 子类可以使用父类的所有属性（attribute）
+    + 可以调用在父类中定义的属性和方法
+    + 但如果重新定义了某些方法，则使用更新后的方法（override）
+    + 强制调用被覆盖（override）的父类方法：
+        + `Parent.foo(self, xxx, xxxx)`
+        + `super().foo(xxx,xxxx)`
++ 私有化概念
+    + 只能在类内被调用，不能在外部使用
+    + 在变量名前加下划线表示私有 `self._id`   `def _foo(self, xxx)`
++ 类型（Type）和实例（instance）的区别：
+
+    ```Python 
+    class A:
+        pass
+    class B(A):
+        pass
+    
+    a = A()
+    b = B()
+
+    type(a) == type(b) # False
+    isinstance(b, A) # True 这里因为 B 是 A 的子类
+
+    # isinstance() 的其他用例:
+    isinstance(a, B) # False
+    isinstance(B, A) # False
+    isinstance(A, B) # False
+    ```
+
+#### 多态 Polymorphism
++ 多态通常有两种可能性
+    + 一种是从父类覆盖方法（override）
+
+        ```Python
+        class A:
+            def foo(self):
+                pass
+        
+        class B(A):
+            @overrides(A)
+            def foo(self):
+                pass
+        ```
+    + 另一种是在一个类中有相同名称但参数不同的方法，称为重载 （overload）
+
+        ```Python
+        class A:
+
+            @overload
+            def foo(self, a: str):
+                pass
+
+            @overload
+            def foo(self, a: str, b: int):
+                pass
+        ```
+
+#### 抽象类 Abstract class
+
+带有抽象方法的类就是抽象类
+
++ 抽象方法：在方法中，如果只有一行 `raise NotImplementedError`，则称为抽象方法
+
+    + 值得注意的是，仅有 `raise NotImplementedError` 的方法不是真正的抽象方法，因为 Python 不会阻止我们创建该方法的实例（换句话说，Python 不会阻止我们创建这个抽象类的实例）。创建抽象函数的正确方式是使用 `@abstractmethod` 装饰器创建抽象函数。
+
+        ```Python 
+        from abc import ABC, abstractmethod
+        class A:
+            @abstractmethod
+            def foo(self):
+                raise NotImplementedError
+
+        class B(A):
+            def foo(self):
+                ... # 在这里添加一些代码
+        ```
+
+        在上面的例子中，类 A 是一个抽象类，因为它有一个抽象方法 foo()。
+
+#### Representation inverate (RI) 表示不变性
+
+类中的每个属性都需要满足特定条件
+
++ 对于常规变量和方法，我们需要指定变量的类型和方法的返回值
+
+    ```Python
+    class A:
+        num: int
+        name: str
+
+        def foo(self, num: int, name: str) -> None:
+            ...
+    ```
++ 对于条件变量，例如推文的长度不超过 280 个字符，有三种方式来限制这个条件
+    + 第一种方式：通过限制前提条件
+        + 使用这种方法时，我们假设所有输入都是正确的，并且使用我们的方法的人需要在输入之前确认条件是否满足，例如：
+
+        ```Python
+        class Tweet:
+            """
+            === Representation inverate ===
+            content: len(content) <= 280
+            """
+            content: str
+
+            def set_content(self, content: str) -> None:
+                """
+                Pre-condition: len(content) <= 280
+                """
+                self.content = content
+        ```
+    + 第二种方式：直接检查输入，如果输入不满足调节则不处理
+        + 这种方法也称为无声失败 (failing silently)
+
+        ```Python
+        class Tweet:
+            """
+            === Representation inverate ===
+            content: len(content) <= 280
+            """
+            content: str
+
+            def set_content(self, content: str) -> None:
+                if len(content) <= 280:
+                    self.content = content
+        ```
+    + 第三种方式：在方法内部隐式修复问题
+        + 使用这种方法时，我们不对输入施加任何条件，但在处理输入时，我们会修复不满足条件的输入，以达到匹配条件的目的（例如：使用合格的参数替换，删除不满足条件的输入的一部分，等等）
+
+        ```Python
+        class Tweet:
+            """
+            === Representation inverate ===
+            content: len(content) <= 280
+            """
+            content: str
+
+            def set_content(self, content: str) -> None:
+                self.content = content[:280]
+        ```
+
+### 异常处理
+
+异常也是对象，而异常的父类是 `Exception`。因此，任何继承自 `Exception` 类的类都可以被系统识别为异常类型。
+
++ 创建异常对象不会影响程序执行，只有在抛出异常对象时才会影响程序执行。
+    + 抛出异常的常见方式：`raise XXXXError`
+        + 创建自定义异常：
+
+        ```Python 
+        class MyError(Exception):
+            """ This is an example exception error """
+            pass
+        ```
+
++ 断言语句（通常在单元测试中使用）：
+    + `assert expression, [msg]` 如果表达式的值为 `False`，则引发断言异常。
+        + 示例：`assert 0 == 1, "错误消息"` 这行代码将引发 `AssertionError: 错误消息`
+
+#### Try 模块
+
++ try 模块分为四个部分：`try`，`except`，`else` 和 `finally`
+    + `try`：需要验证的代码，当此处发生错误时，不会直接抛出错误，而是跳转到 `except` 部分运行代码。
+        + 代码在 `try` 中运行是，只要出现了一个异常，就会立刻从 `try` 中跳出只后续的模块中
+    + `except`：它是错误处理的解决方案。一个 `try` 模块可以有多个 `except` 模块。
+        + 使用 `except` 模块使用的是 `isinstance(e, XXXError)` 进行判断
+        + 如果异常没有被 `except` 模块笑话，则错误将被抛掷系统中
+    + `else`，`finally` 都是可选的
+        + `else`：在 `try` 代码块中没有生成错误时，执行此处的代码
+        + `finally`：无论 `try` 代码块中是否抛出异常，此处的代码都将执行。
+    + 示例：
+        ```Python 
+        try:
+            # 这里是可能抛出异常的代码
+        except ExceptionType1:
+            # 当 try 代码块中的代码引发特定类型的异常时，将执行此处的代码
+        except ExceptionType2:
+            # 当 try 代码块中的代码引发特定类型的异常时，将执行此处的代码
+        else:
+            # 如果 try 代码块中的代码没有引发异常，则将执行此处的代码
+        finally:
+            # 无论 try 代码块中是否引发异常，都将执行此处的代码
+        ```
+
+### 抽象数据类型（ADT）
+
+抽象数据类型（ADTs）仅定义数据结构的功能（操作），而不指定如何实现它。
+
++ 例如，我们可以定义一个堆栈 ADT，其中可能包括以下操作：
+    + `push(item)`: 将元素添加到堆栈的顶部。
+    + `pop()`: 删除并返回堆栈顶部的元素。
+    + `peek()`: 返回堆栈顶部的元素，但不删除它。
+    + `is_empty()`: 检查堆栈是否为空。
+
++ 在 Python 中，我们可以使用类来实现这个 ADT：
+    ```Python 
+    class Stack:
+        def __init__(self):
+            self.items = []
+
+        def push(self, item):
+            self.items.append(item)
+
+        def pop(self):
+            return self.items.pop()
+
+        def peek(self):
+            return self.items[-1]
+
+        def is_empty(self):
+            return not bool(self.items)
+    ```
+    通过代码我们看出，这个堆栈是使用列表实现的。这就是 ADT 的概念；它只定义了数据结构中存在的操作，但不指定这些操作如何实现。
+
+### 栈和队列 Stack and Queue 
+
+它们是抽象数据类型（ADTs）
+
+#### 栈 (Stack)
+一种后进先出（LIFO）的数据结构
+
++ 定义的操作：`push(item)`、`pop()`、
+
+`is_empty()`
+    + `push(item)`: 将元素添加到堆栈的顶部
+    + `pop()`: 删除并返回堆栈顶部的元素
+    + `is_empty()`: 检查堆栈是否为空
+
++ 我们学习了如何使用常规列表和链表来实现堆栈，如 tt1 所示。
+    + 常规列表时间复杂度：
+        + `push(item)`: 最佳 O(1)；最坏 O(n)；平均 O(1)
+        + `pop()`: 最佳 O(1)；最坏 O(1)；平均 O(1)
+        + `is_empty()`: 最佳 O(1)；最坏 O(1)；平均 O(1)
+    + 链表时间复杂度：
+        + `push(item)`: 最佳 O(1)；最坏 O(n)；平均 O(1)
+        + `pop()`: 最佳 O(1)；最坏 O(1)；平均 O(1)
+        + `is_empty()`: 最佳 O(1)；最坏 O(1)；平均 O(1)
+
+#### 队列 (Queue)
+一种先进先出（FIFO）的数据结构
+
++ 定义的操作：`enqueue(item)`、`dequeue()`、`is_empty()`
+    + `enqueue(item)`: 将元素添加到队列的末尾
+    + `dequeue()`: 删除并返回队列前端的元素
+    + `is_empty()`: 检查队列是否为空
+
++ 我们学习了如何使用常规列表和链表来实现队列，如 tt1 所示。
+    + 常规列表时间复杂度：
+        + `enqueue(item)`: 最佳 O(1)；最坏 O(n)；平均 O(1)
+        + `dequeue()`: 最佳 O(1)；最坏 O(n)；平均 O(n)
+        + `is_empty()`: 最佳 O(1)；最坏 O(1)；平均 O(1)
+    + 链表时间复杂度：
+        + `enqueue(item)`: 最佳 O(1)；最坏 O(n)；平均 O(1)
+        + `dequeue()`: 最佳 O(1)；最坏 O(n)；平均 O(n) 或 O(1)（取决于链表的实现方式）
+        + `is_empty()`: 最佳 O(1)；最坏 O(1)；平均 O(1)
+
+### 单链表 Single Linked List
+
+单链表是由一组节点组成的一维列表结构。
+
+#### 节点 Node
+单链表的节点是一个包含 `item` 和 `next` 属性的私有类。
+```Python 
+from __future__ import annotations
+from typing import Any, Optional
+
+class _Node:
+    item: Any
+    next: Optional[_Node]
+```
+
+#### 单链表代码
+
+```Python
+class LinkedList:
+    _first: Optional[_Node]
+    
+    def __init__(self):
+        self._first = None
+    
+    def append(self, item: Any) -> None:
+        if _first is None:
+            self._first = None
+            return
+        curr = self._first
+        while curr.next is not None:
+            curr = curr.next
+        curr.next = _Node(item)
+    
+    def __len__(self) -> int:
+        counter = 0
+        curr = self._first
+        while curr is not None:
+            counter += 1
+            curr = curr.next
+        return counter
+
+    def __contains__(self, target: Any) -> bool:
+        curr = self._first
+        while curr is not None:
+            if curr.item == target:
+                return True
+        return False
+    
+    def __eq__(self, other: LinkedList) -> bool:
+        curr1 = self._first
+        curr2 = other._first
+        while curr1 is not None and curr2 is not None:
+            if curr1.item != curr2.item:
+                return False
+            curr1 = curr1.next
+            curr2 = curr2.next
+        return curr1 == curr2
+
+    def __getitem__(self, index: int) -> Any:
+        curr = self._first
+        i = 0
+        while i < index:
+            if curr None:
+                raise IndexError
+            curr = curr.next
+            i += 1
+        return curr.item
+    
+    def __setitem__(self, index: int, new_item: Any) -> None:
+        if self._first None:
+            return IndexError
+        curr = self._first
+        i = 0
+        while i < index:
+            if curr None:
+                raise IndexError
+            curr = curr.next
+            i += 1
+        curr.item = new_item
+```
+
+
+### 结论
+祝大家考试顺利！祝所有考生顺利进行考试！！
