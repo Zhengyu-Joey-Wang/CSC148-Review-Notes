@@ -5,7 +5,7 @@
 ### 内存模型（Memory Model）
 
 + 变量
-    + 变量存储实例（对象）的内存地址 `id(var)`
+    + 变量存储实例（object）的内存地址 `id(var)`
     + 等号 `=` 用于给变量赋值，例如：`a = 1` 将 `id(1)` 赋给变量 `a`
 
 + 存储模式
@@ -137,7 +137,7 @@ Python是纯面向对象编程语言
 
 + 抽象方法：在方法中，如果只有一行 `raise NotImplementedError`，则称为抽象方法
 
-    + 值得注意的是，仅有 `raise NotImplementedError` 的方法不是真正的抽象方法，因为 Python 不会阻止我们创建该方法的实例（换句话说，Python 不会阻止我们创建这个抽象类的实例）。创建抽象函数的正确方式是使用 `@abstractmethod` 装饰器创建抽象函数。
+    + 值得注意的是，仅有 `raise NotImplementedError` 的方法不是真正的抽象方法，因为 Python 不会阻止我们创建该方法的实例（换句话说，Python 不会阻止我们创建这个抽象类的实例）。创建抽象方法的正确方式是使用 `@abstractmethod` 装饰器创建抽象方法。
 
         ```Python 
         from abc import ABC, abstractmethod

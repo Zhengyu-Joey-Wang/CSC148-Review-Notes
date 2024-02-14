@@ -82,10 +82,10 @@ The ability to model - turning business into several organic entities
 #### Inheritance
 + `python` is a single-inheritance language — each class has only one parent class
 + Subclasses can use all attributes of the parent class (attributes)
-    + Can call attributes and functions defined in the parent class
+    + Can call attributes and methods defined in the parent class
     + But if some method are redefined, then use the updated definition (override)
         + Always use the definition closest to itself.
-    + Force calling an overridden parent class function:
+    + Force calling an overridden parent class method:
         + `Parent.foo(self, xxx, xxxx)`
         + `super().foo(xxx,xxxx)`
 + Private concept
@@ -148,7 +148,7 @@ The ability to model - turning business into several organic entities
 A class with abstract methods
 
 + Abstract method: In a method, if there is only one line `raise NotImplementedError`, it is called an abstract method
-    + It's worth noting that a method that only raises `NotImplementedError` is not a true abstract method, as Python will not prevent us from creating an instance of this method (in other words, Python will not prevent us from creating an instance of this abstract class). The correct way to create an abstract function is to use the `@abstractmethod` decorator to create an abstract method.
+    + It's worth noting that a method that only raises `NotImplementedError` is not a true abstract method, as Python will not prevent us from creating an instance of this method (in other words, Python will not prevent us from creating an instance of this abstract class). The correct way to create an abstract method is to use the `@abstractmethod` decorator to create an abstract method.
 
         ```Python 
         class A:
