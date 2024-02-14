@@ -1,6 +1,6 @@
 ## CSC148 Midterm1 Review
 
-> For English please go here https://github.com/Zhengyu-Joey-Wang/CSC148-Midterm1-Review-Notes
+> For English please go here https://github.com/Zhengyu-Joey-Wang/CSC148-Review-Notes
 
 ### 内存模型（Memory Model）
 
