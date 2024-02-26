@@ -1,6 +1,8 @@
 ## CSC148 Midterm1 Review
 
-> 中文请查看 https://github.com/Zhengyu-Joey-Wang/CSC148-Review-Notes/tree/master/zh
+[点击这里查看中文版](./zh/CSC148-期中1-笔记.md)
+
+[Back to the home page](../README.md)
 
 ### Memory Model
 
