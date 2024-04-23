@@ -10,7 +10,6 @@ The review notes and code in this repository is based on the University of Toron
 
 + **[CSC148 Midterm1 Review (Click me)](./Midterm1-Review/CSC148-Midterm1-review.md)**
 
-
 ## Author
 
 + **Zhengyu-Joey-Wang**
